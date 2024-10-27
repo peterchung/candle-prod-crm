@@ -1,13 +1,26 @@
 import { Router } from 'express';
 const router = Router();
 
-import * as transformationController from '../controllers/monday-controller';
+import * as transformController from '../controllers/transform-controller';
 import authenticationMiddleware from '../middlewares/authentication';
+import * as fragranceController from '../controllers/fragrance-controller';
+// import * as webhookMiddleware from '../middlewares/webhook';
 
 router.post(
-  '/api/monday/execute_action',
+  '/monday/execute_action',
   authenticationMiddleware,
-  transformationController.executeAction
+  transformController.executeAction
+);
+router.post(
+  '/monday/get_remote_list_options',
+  authenticationMiddleware,
+  transformController.getRemoteListOptions
+);
+
+router.post(
+  '/monday/add_new_fragrance',
+  authenticationMiddleware,
+  fragranceController.addNewFragrance
 );
 
 export default router;
