@@ -1,5 +1,6 @@
 import MondayService from '../services/monday-service';
 import db from '../../utilities/db';
+import { transformData } from '../../utilities/data-transformer';
 
 export async function addNewFragrance(req, res) {
   try {
@@ -8,12 +9,18 @@ export async function addNewFragrance(req, res) {
     const { inputFields } = payload;
     const { itemId } = inputFields;
 
-    // Use Monday's API to get the latest item
-    const itemName = await MondayService.getItemName(shortLivedToken, itemId);
     const newEntry = {
       id: itemId,
-      item: itemName[0],
+      item: '',
     };
+
+    // Use Monday's API to get the latest item
+    const itemData = await MondayService.getItemName(shortLivedToken, itemId);
+    const columnValues = transformData(itemData[0]);
+
+    for (const [attribute, val] of Object.entries(columnValues)) {
+      newEntry[attribute] = val;
+    }
 
     await db.fragrances.create({ data: newEntry });
 

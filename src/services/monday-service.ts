@@ -52,23 +52,23 @@ class MondayService {
       const query = `query($itemId: [ID!]) {
         items (ids: $itemId) {
           name
+          column_values {
+            value
+            column {
+              title
+              id
+            }
+          }
         }
       }`;
 
       const variables = { itemId: [itemId] };
-
       const response = await mondayClient.api(query, { variables });
 
-      // Extract the name from the response
-      if (response.data && response.data.items) {
-        const itemNames = response.data.items.map((item) => item.name);
-        return itemNames;
-      } else {
-        console.log('No items found or unexpected response structure.');
-        return [];
-      }
+      return response.data.items;
     } catch (err) {
       console.log(err);
+      throw new Error('Failed query item from Monday.com');
     }
   }
 }
