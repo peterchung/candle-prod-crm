@@ -1,4 +1,5 @@
 import MondayService from '../services/monday-service';
+import db from '../../utilities/db';
 
 export async function addNewFragrance(req, res) {
   try {
@@ -9,10 +10,13 @@ export async function addNewFragrance(req, res) {
 
     // Use Monday's API to get the latest item
     const itemName = await MondayService.getItemName(shortLivedToken, itemId);
+    const newEntry = {
+      id: itemId,
+      item: itemName[0],
+    };
 
-    console.log('new item name:', itemName);
+    await db.fragrances.create({ data: newEntry });
 
-    console.log('process successfully');
     return res.status(200).json({ message: 'Event processed successfully' });
   } catch (err) {
     console.error('Webhook callback error:', err);
