@@ -23,4 +23,10 @@ router.post(
   fragranceController.addNewFragrance
 );
 
+router.post(
+  '/monday/update_fragrance_value',
+  authenticationMiddleware,
+  fragranceController.updateFragranceValue
+);
+
 export default router;

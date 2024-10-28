@@ -15,7 +15,7 @@ model Fragrances {
   item String
   description String?
   category String?
-  createdDate DateTime?
-  updatedDate DateTime?
+  createdDate String?
+  updatedDate String?
   imageURL String?
 }
