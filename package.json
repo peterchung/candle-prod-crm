@@ -9,7 +9,8 @@
     "expose": "mapps tunnel:create -p 8080",
     "stop": "kill-port 8080",
     "deploy": "npm run client-build && mapps code:push",
-    "client-build": "cd client && npm run build"
+    "client-build": "cd client && npm run build",
+    "client-dev": "cd client && npm run dev"
   },
   "dependencies": {
     "@prisma/client": "^5.21.1",

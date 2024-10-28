@@ -5,13 +5,14 @@
   "scripts": {
     "prebuild": "npm install",
     "build": "react-scripts build",
-    "dev": "react-scripts start",
+    "dev": " PORT=3000 react-scripts start",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
   "dependencies": {
     "monday-sdk-js": "^0.5.0",
-    "monday-ui-react-core": "^1.54.0"
+    "monday-ui-react-core": "^1.54.0",
+    "react-router-dom": "^6.27.0"
   },
   "eslintConfig": {
     "extends": "react-app"
