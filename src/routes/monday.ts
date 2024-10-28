@@ -29,4 +29,6 @@ router.post(
   fragranceController.updateFragranceValue
 );
 
+router.post('/monday/delete_fragrance', fragranceController.deleteFragrance);
+
 export default router;

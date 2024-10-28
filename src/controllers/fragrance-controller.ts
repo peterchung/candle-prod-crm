@@ -24,7 +24,7 @@ export async function addNewFragrance(req, res) {
 
     await db.fragrances.create({ data: newEntry });
 
-    return res.status(200).json({ message: 'Event processed successfully' });
+    return res.status(200).json({ message: 'Fragrance successfully added' });
   } catch (err) {
     console.error('error adding new fragrance:', err);
     return res.status(500).json({ message: 'Failed to add new fragrance' });
@@ -67,9 +67,33 @@ export async function updateFragranceValue(req, res) {
       },
     });
 
-    return res.status(200).json({ message: 'Event processed successfully' });
+    return res.status(200).json({ message: 'Fragrance successfully updated' });
   } catch (err) {
     console.error('error updating fragrance:', err);
     return res.status(500).json({ message: 'Failed to update fragrance' });
+  }
+}
+
+export async function deleteFragrance(req, res) {
+  try {
+    const { challenge, event } = req.body;
+
+    if (challenge) {
+      return res.status(200).json({ challenge });
+    }
+
+    if (event) {
+      const itemId = event.itemId;
+      await db.fragrances.delete({
+        where: {
+          id: itemId,
+        },
+      });
+    }
+
+    return res.status(200).json({ message: 'Fragrance successfully deleted' });
+  } catch (err) {
+    console.error('error deleting fragrance:', err);
+    return res.status(500).json({ message: 'Failed to delete fragrance' });
   }
 }
