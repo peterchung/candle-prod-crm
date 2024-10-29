@@ -88,7 +88,9 @@ class MondayService {
       const shippingAddress = `${itemData.city}, ${itemData.state}`;
       const columnValues = {
         text5: itemData.candleInscription,
-        dropdown: { labels: ['Smokey', 'Fruity', 'Fresh'] },
+        dropdown: {
+          labels: itemData.selectedFragrances.map((cat) => cat.label),
+        },
         numbers: 1,
         date_1: dateNow,
         text: itemData.firstName,

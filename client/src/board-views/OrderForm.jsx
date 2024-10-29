@@ -56,16 +56,16 @@ async function updateProductionOrdersBoard(itemData) {
   }
 }
 const getFragranceAndSetOptions = async (setAllFragrances) => {
-  const itemNames = await getItemNames();
-  const newFragrances = Object.entries(itemNames).map(([id, name]) => ({
-    value: name,
-    label: name,
+  const itemNames = await getItemCategory();
+  const newFragrances = Object.entries(itemNames).map(([id, category]) => ({
+    value: category,
+    label: category,
   }));
 
   setAllFragrances(newFragrances);
 };
 
-async function getItemNames() {
+async function getItemCategory() {
   const response = await axios.get(
     'https://c8e7-173-73-226-98.ngrok-free.app/get_fragrance_list'
   );

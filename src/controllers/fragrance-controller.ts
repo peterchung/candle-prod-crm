@@ -111,7 +111,7 @@ export async function getAllFragrances(req, res, next) {
     const fragranceList = await db.fragrances.findMany();
     const returnData = {};
     for (const fragrance of fragranceList) {
-      returnData[fragrance.id.toString()] = fragrance.item;
+      returnData[fragrance.id.toString()] = fragrance.category;
     }
 
     res.locals.data = returnData;
