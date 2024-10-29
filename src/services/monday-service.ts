@@ -54,6 +54,9 @@ class MondayService {
           name
           column_values {
             value
+            ... on DropdownValue {
+            text
+            }
             column {
               title
               id
@@ -107,8 +110,6 @@ class MondayService {
         columns: JSON.stringify(columnValues),
       };
       const response = await mondayClient.api(query, { variables });
-
-      console.log('full response', response);
 
       return response;
     } catch (err) {

@@ -63,6 +63,7 @@ const getFragranceAndSetOptions = async (setAllFragrances) => {
   }));
 
   setAllFragrances(newFragrances);
+  // return newFragrances;
 };
 
 async function getItemCategory() {

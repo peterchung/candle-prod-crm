@@ -16,6 +16,7 @@ export async function addNewFragrance(req, res) {
 
     // Use Monday's API to get the latest item
     const itemData = await MondayService.getItemName(shortLivedToken, itemId);
+
     const columnValues = transformData(itemData[0]);
 
     for (const [attribute, val] of Object.entries(columnValues)) {

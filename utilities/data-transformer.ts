@@ -26,7 +26,12 @@ export function transformData(data) {
 
     try {
       const parsedValue = JSON.parse(column.value);
-      output[attributeName] = parsedValue.date || parsedValue;
+
+      if (data.column_values.indexOf(column) === 1) {
+        output[attributeName] = column.text;
+      } else {
+        output[attributeName] = parsedValue.date || parsedValue;
+      }
     } catch {
       output[attributeName] = column.value.replace(/^"|"$/g, '');
     }
