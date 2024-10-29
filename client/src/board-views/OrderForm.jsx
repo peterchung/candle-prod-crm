@@ -57,9 +57,9 @@ async function updateProductionOrdersBoard(itemData) {
 }
 const getFragranceAndSetOptions = async (setAllFragrances) => {
   const itemNames = await getItemCategory();
-  const newFragrances = Object.entries(itemNames).map(([id, category]) => ({
-    value: category,
-    label: category,
+  const newFragrances = Object.entries(itemNames).map(([id, fragranceObj]) => ({
+    value: fragranceObj.category,
+    label: fragranceObj.name,
   }));
 
   setAllFragrances(newFragrances);
@@ -94,23 +94,31 @@ const OrderForm = () => {
     getFragranceAndSetOptions(setAllFragrances);
   }, []);
 
-  console.log('fragrances', allFragrances);
-
   const allOptions = useMemo(() => allFragrances, [allFragrances]);
 
   const options = useMemo(() => {
-    if (!searchValue) return allOptions;
+    if (searchValue === '') return allOptions;
     return allOptions.filter((option) =>
       option.label.toLowerCase().includes(searchValue.toLowerCase())
     );
   }, [allOptions, searchValue]);
 
   const onInputChange = (value) => {
+    console.log('current serach val', value);
     setSearchValue(value);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!validateFragranceCount()) {
+      return alert(
+        `Please select exactly ${
+          Number(boxQuantity) * 3
+        } fragrances (3 per box)`
+      );
+    }
+
     const formData = {
       firstName,
       lastName,
@@ -124,8 +132,12 @@ const OrderForm = () => {
     };
 
     await updateProductionOrdersBoard(formData);
+    return alert(`Order successfully submitted!`);
+  };
 
-    console.log('Form Data:', formData);
+  const validateFragranceCount = () => {
+    const requiredFragrances = Number(boxQuantity) * 3;
+    return selectedFragrances.length === requiredFragrances;
   };
 
   return (
@@ -137,12 +149,43 @@ const OrderForm = () => {
       >
         <div style={{ width: '800px' }}>
           <Box marginBottom={Box.marginBottoms.LARGE}>
-            <Accordion
-              defaultIndex={[2]}
-              allowMultiple
-              style={{ width: '500px' }}
-            >
-              <AccordionItem title='1. Customer Contact Information'>
+            <Accordion defaultIndex={[3]} allowMultiple>
+              <AccordionItem title='1. Order Details'>
+                <Flex
+                  direction={Flex.directions.COLUMN}
+                  gap={Flex.gaps.MEDIUM}
+                  align={Flex.align.CENTER}
+                >
+                  <div style={{ width: '700px' }}>
+                    <TextField
+                      placeholder='For my best friend forever'
+                      title='Candle inscription'
+                      value={candleInscription}
+                      onChange={(value) => setCandleInscription(value)}
+                    />
+                    <TextField
+                      placeholder='Enter box quantity'
+                      title='Quantity (box)'
+                      required
+                      value={boxQuantity}
+                      onChange={(value) => setBoxQuantity(value)}
+                    />
+                    <div style={{ width: '700px' }}>
+                      <Dropdown
+                        options={options}
+                        multi
+                        // multiline
+                        isVirtualized
+                        placeholder='Select fragrances'
+                        className='dropdown-stories-styles_with-chips'
+                        onInputChange={onInputChange}
+                        onChange={(value) => setSelectedFragrances(value)}
+                      />
+                    </div>
+                  </div>
+                </Flex>
+              </AccordionItem>
+              <AccordionItem title='2. Customer Contact Information'>
                 <Flex
                   direction={Flex.directions.COLUMN}
                   gap={Flex.gaps.MEDIUM}
@@ -182,7 +225,7 @@ const OrderForm = () => {
                   </div>
                 </Flex>
               </AccordionItem>
-              <AccordionItem title='2. Shipping Address'>
+              <AccordionItem title='3. Shipping Address'>
                 <Flex
                   direction={Flex.directions.COLUMN}
                   gap={Flex.gaps.MEDIUM}
@@ -208,41 +251,6 @@ const OrderForm = () => {
               </AccordionItem>
             </Accordion>
           </Box>
-        </div>
-        <div style={{ width: '800px' }}>
-          {/* <h5>Candle inscription</h5> */}
-          <TextField
-            placeholder='For my best friend forever'
-            title='Candle inscription'
-            size={TextField.sizes.MEDIUM}
-            value={candleInscription}
-            onChange={(value) => setCandleInscription(value)}
-          />
-          {/* <h5>Quantity (box)</h5> */}
-          <TextField
-            placeholder='Enter box quantity'
-            title='Quantity (box)'
-            required={true}
-            requiredAsterisk={true}
-            size={TextField.sizes.MEDIUM}
-            type={TextField.types.NUMBER}
-            style={{ fontWeight: 'bold' }}
-            value={boxQuantity}
-            onChange={(value) => setBoxQuantity(value)}
-          />
-          {/* <Box marginTop={Box.marginYs.MEDIUM}> */}
-          {/* <h5>Fragrances</h5> */}
-          <Dropdown
-            options={options}
-            multi
-            multiline
-            placeholder='Select fragrances'
-            className='dropdown-stories-styles_with-chips'
-            onInputChange={onInputChange}
-            onChange={(value) => setSelectedFragrances(value)}
-            style={{ width: '300px' }}
-          />
-          {/* </Box> */}
         </div>
         <Box marginBottom={Box.marginBottoms.XXL}>
           <Button type={Button.types.SUBMIT}>Submit</Button>

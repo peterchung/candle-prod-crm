@@ -89,9 +89,9 @@ class MondayService {
       const columnValues = {
         text5: itemData.candleInscription,
         dropdown: {
-          labels: itemData.selectedFragrances.map((cat) => cat.label),
+          labels: itemData.selectedFragrances.map((cat) => cat.value),
         },
-        numbers: 1,
+        numbers: Number(itemData.boxQuantity),
         date_1: dateNow,
         text: itemData.firstName,
         text6: itemData.lastName,
