@@ -27,9 +27,6 @@ npm install
 
 ```bash
 npm run dev-server
-```
-
-```bash
 ngrok http 8080
 ```
 
