@@ -71,6 +71,49 @@ class MondayService {
       throw new Error('Failed query item from Monday.com');
     }
   }
+
+  static async updatedProdBoard(token, itemData) {
+    try {
+      const mondayClient = initMondayClient();
+      mondayClient.setToken(token);
+      mondayClient.setApiVersion('2024-01');
+
+      const query = `mutation ($boardId: ID!, $groupId: String!, $itemName: String!, $columns: JSON!) {
+      create_item (board_id: $boardId, group_id: $groupId, item_name: $itemName, column_values: $columns) {
+      id
+        }
+      }`;
+
+      const dateNow = new Date().toISOString().split('T')[0];
+      const shippingAddress = `${itemData.city}, ${itemData.state}`;
+      const columnValues = {
+        text5: itemData.candleInscription,
+        dropdown: { labels: ['Smokey', 'Fruity', 'Fresh'] },
+        numbers: 1,
+        date_1: dateNow,
+        text: itemData.firstName,
+        text6: itemData.lastName,
+        location: { lat: '40.7128', lng: '-74.0060', address: shippingAddress },
+        email: { email: itemData.email, text: itemData.email },
+        phone: itemData.phone,
+      };
+
+      const variables = {
+        boardId: '7691216056',
+        groupId: 'topics',
+        itemName: 'New Order',
+        columns: JSON.stringify(columnValues),
+      };
+      const response = await mondayClient.api(query, { variables });
+
+      console.log('full response', response);
+
+      return response;
+    } catch (err) {
+      console.log(err);
+      throw new Error('Failed query item from Monday.com');
+    }
+  }
 }
 
 export default MondayService;

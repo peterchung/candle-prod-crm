@@ -10,6 +10,7 @@
     "eject": "react-scripts eject"
   },
   "dependencies": {
+    "axios": "^1.7.7",
     "monday-sdk-js": "^0.5.0",
     "monday-ui-react-core": "^1.54.0",
     "react-router-dom": "^6.27.0"

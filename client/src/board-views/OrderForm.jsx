@@ -26,33 +26,35 @@ const monday = mondaySdk();
 //   }
 // }
 
-// TODO: Modify to handle updating production orders board
-// async function updateProductionOrdersBoard(itemIds) {
-//   try {
-//     const token = await monday.get('sessionToken');
-//     console.log('token', token);
-//     const response = await axios.post(
-//       'https://c8e7-173-73-226-98.ngrok-free.app/monday/get_fragrance_list',
-//       {
-//         itemIds: itemIds,
-//       },
-//       {
-//         headers: {
-//           authorization: token.data,
-//           'order-view-request': true,
-//         },
-//       }
-//     );
+async function updateProductionOrdersBoard(itemData) {
+  try {
+    const token = await monday.get('sessionToken');
+    console.log('token', token);
+    const response = await axios.post(
+      'https://c8e7-173-73-226-98.ngrok-free.app/monday/add_order',
+      {
+        itemData: itemData,
+      },
+      {
+        headers: {
+          authorization: token.data,
+          'order-view-request': true,
+        },
+      }
+    );
 
-//     console.log('back in orderform component with names', response.data);
-//   } catch (err) {
-//     console.error('Error details:', {
-//       message: err.message,
-//       response: err.response?.data, // Get error response from server
-//       status: err.response?.status,
-//     });
-//   }
-// }
+    console.log(
+      'back in orderform component with success message',
+      response.data
+    );
+  } catch (err) {
+    console.error('Error details:', {
+      message: err.message,
+      response: err.response?.data,
+      status: err.response?.status,
+    });
+  }
+}
 const getFragranceAndSetOptions = async (setAllFragrances) => {
   const itemNames = await getItemNames();
   const newFragrances = Object.entries(itemNames).map(([id, name]) => ({
@@ -107,11 +109,7 @@ const OrderForm = () => {
     setSearchValue(value);
   };
 
-  const onChange = (value) => {
-    setSelectedFragrances((prevSelected) => [...prevSelected, value]);
-  };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = {
       firstName,
@@ -124,6 +122,8 @@ const OrderForm = () => {
       city,
       state,
     };
+
+    await updateProductionOrdersBoard(formData);
 
     console.log('Form Data:', formData);
   };
@@ -239,7 +239,7 @@ const OrderForm = () => {
             placeholder='Select fragrances'
             className='dropdown-stories-styles_with-chips'
             onInputChange={onInputChange}
-            onChange={onChange}
+            onChange={(value) => setSelectedFragrances(value)}
             style={{ width: '300px' }}
           />
           {/* </Box> */}

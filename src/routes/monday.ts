@@ -2,8 +2,9 @@ import { Router } from 'express';
 const router = Router();
 
 import * as transformController from '../controllers/transform-controller';
-import authenticationMiddleware from '../middlewares/authentication';
+import { authenticationMiddleware } from '../middlewares/authentication';
 import * as fragranceController from '../controllers/fragrance-controller';
+import * as productionController from '../controllers/production-controller';
 // import * as webhookMiddleware from '../middlewares/webhook';
 
 router.post(
@@ -30,5 +31,11 @@ router.post(
 );
 
 router.post('/monday/delete_fragrance', fragranceController.deleteFragrance);
+
+router.post(
+  '/monday/add_order',
+  authenticationMiddleware,
+  productionController.addOrder
+);
 
 export default router;
