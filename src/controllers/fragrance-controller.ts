@@ -36,23 +36,31 @@ export async function updateFragranceValue(req, res) {
     const { payload } = req.body;
     const { inputFields } = payload;
     const { itemId, columnId, columnValue } = inputFields;
+    const { chosenValues } = columnValue;
+    console.log('chose value', chosenValues);
 
     const columnTitles = {
       text5__1: 'description',
-      text8__1: 'category',
+      category__1: 'category',
       date4: 'createdDate',
       dup__of_created_date__1: 'updatedDate',
       text7__1: 'imageURL',
     };
 
     let attribute = '';
-    let value = columnValue.value;
+    let value = columnValue.text;
 
+    // get the corresponding sql field
     for (const [id, title] of Object.entries(columnTitles)) {
       if (id === columnId) {
         attribute = title;
+        // check if the value is from a date column
         if (columnId.includes('date')) {
           value = columnValue.date;
+        }
+        // check if the value is from the dropdown column Category
+        if (columnId === 'category__1') {
+          value = chosenValues[0].name;
         }
         break;
       }
