@@ -97,3 +97,47 @@ export async function deleteFragrance(req, res) {
     return res.status(500).json({ message: 'Failed to delete fragrance' });
   }
 }
+
+export async function getAllFragrances(req, res, next) {
+  try {
+    const fragranceList = await db.fragrances.findMany();
+    const returnData = {};
+    for (const fragrance of fragranceList) {
+      returnData[fragrance.id.toString()] = fragrance.item;
+    }
+
+    res.locals.data = returnData;
+    next();
+  } catch (err) {
+    console.error('error retrieving fragrance data', err);
+    return res
+      .status(500)
+      .json({ message: 'Failed to get list of fragrances' });
+  }
+}
+
+// TODO: controller to mutate Production Orders board
+// export async function frontEndAllFragrances(req, res, next) {
+//   try {
+//     const token = process.env.MONDAY_API_TOKEN;
+//     const { itemIds } = req.body;
+
+//     console.log('itemIds', itemIds);
+
+//     // Use Monday's API to get the latest item
+//     const itemData = await MondayService.frontEndItemName(token, itemIds);
+//     const result = {};
+
+//     for (const [name, val] of Object.entries(itemData)) {
+//       result[name] = val;
+//     }
+//     console.log('obj with names', result);
+//     res.locals.data = result;
+//     next();
+//   } catch (err) {
+//     console.error('error retrieving fragrance data', err);
+//     return res
+//       .status(500)
+//       .json({ message: 'Failed to get list of fragrances' });
+//   }
+// }
